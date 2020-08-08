@@ -1,64 +1,7 @@
 from pasture_orthography import string
-
-# def get_bindings(match, abstract):
-	# if abstract == ["argument"]: return {}
-	# if abstract[0] == "argument" and len(abstract) == 2: return {abstract[1][0]: match}
-	# if len(abstract) > 2:
-		# bindings = {}
-		# for i in range(1,len(match)):
-			# bindings.update(get_bindings(match[i], abstract[i]))
-		# return bindings
-	# return {}
-	
-# def replace(exp, bindings):
-	# if len(exp) == 1 and exp[0] in list(bindings): return bindings[exp[0]]
-	# if type(exp) == list: return [replace(x, bindings) for x in exp]
-	# return exp
-
-# def match_expressions(concrete, abstract):
-	# if abstract[0] == "argument": return True
-	# if concrete[0] != abstract[0] or len(concrete) != len(abstract): return False
-	# re = True
-	# return replace(rule[2], bindings)
-
-# def match_expressions(concrete, abstract):
-	# if abstract[0] == "argument": 
-		# if len(abstract) == 1: return True
-		# return True
-	# if concrete[0] != abstract[0] or len(concrete) != len(abstract): return False
-	# re = True
-	# for i in range(1,len(concrete)):
-		# re = re and match_expressions(concrete[i], abstract[i])
-	# return re
-
-# # finds a place where the expression [concrete] matches the pattern expression [abstract]
-# def find_match(concrete, abstract):
-	# if match_expressions(concrete, abstract): return concrete
-	# if len(concrete) < 3: return None
-	# right = find_match(concrete[2], abstract)
-	# if right is not None: return right
-	# return find_match(concrete[1], abstract)
-	
-# # updates [exp] by replacing [match] with [newval]
-# def update(exp, match, newval):
-	# if exp == match: return newval
-	# if type(exp) == list: return [update(x, match, newval) for x in exp]
-	# return exp
-	
-# # take a small step evaluation of [exp] according to [rules], by:
-# def step(exp, rules):
-	# for rule in rules:
-		# match = find_match(exp, rule[1]) # finding a rule in [rules] that matches [exp],
-		# if match is not None:
-			# bindings = get_bindings(match, rule[1]) # getting the bindings of that rule,
-			# newval = replace(rule[2], bindings) # replacing the output of that rule according to the bindings,
-			# return update(exp, match, newval) # and updating [exp] with that output where the match occurred 
-	# return exp
-	
-# --------------
 	
 # attempts to match [exp] with [pattern]
-# returns the generated bindings if successful, else returns None
+# returns the generated bindings if successful, otherwise None
 def match(exp, pattern):
 	
 	if len(exp) == 1 and exp == pattern: return {}
@@ -95,12 +38,12 @@ def replace(exp, bindings):
 	return exp
 			
 # attempts to apply [rule] to [exp]. 
-# returns None if unsuccessful or (new expression, bindings) if successful
+# returns (new expression, bindings) if successful, otherwise None
 def direct_apply(exp, rule):
 	return replace(rule[2], match(exp, rule[1])) 
 	
-	
-# return None or new expression
+# attempts to apply [rule] to some subexpression of [exp]. 
+# returns new expression if successful, otherwise None
 def subexpression_apply(exp, rule):
 	direct = direct_apply(exp, rule)
 	if direct is not None: 
@@ -134,7 +77,4 @@ def evaluate(exp, rules):
 		a = b
 		b = c
 		assert steps_taken <= step_limit
-		
 	return a
-
-
