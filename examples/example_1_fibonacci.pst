@@ -1,0 +1,10 @@
+# Fibonacci example
+
+0,$y + => y
+$x s,$y + => x,y + s
+
+0 fib => 0
+0 s fib => 0 s
+$x s s fib => x fib,(x s fib) +
+
+main => 0 s s s s s s fib

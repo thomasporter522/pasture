@@ -1,0 +1,25 @@
+# List example
+
+# Define Peano addition
+0,$y + => y
+$x s,$y + => x,y + s
+
+# Define head and tail functions
+$,$y cons head => y
+$x,$ cons tail => x
+
+# Define length function
+nil length => 0
+$x,$ cons length => x length s
+
+# Define increasing list
+0 increasing_list => nil
+$x s increasing_list => x increasing_list,x cons
+
+# make an increasing list of size 4
+
+main => 0 s s s s increasing_list
+
+# or check its length
+
+# main => 0 s s s s increasing_list length

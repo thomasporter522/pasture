@@ -68,11 +68,11 @@ step_limit = 10000
 def evaluate(exp, rules):
 	a = exp
 	steps_taken = 0
-	print(steps_taken, string(a))
+	print(str(steps_taken)+": "+string(a))
 	b = step(a, rules)
 	while a != b:
 		steps_taken += 1
-		print(steps_taken, string(b))
+		print(str(steps_taken)+": "+string(b))
 		c = step(b, rules)
 		a = b
 		b = c

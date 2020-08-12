@@ -1,0 +1,8 @@
+# Equality demo
+
+true not => false
+false not => true
+$x,$x = => true
+$,$ = => false
+
+main => (true not),false =
