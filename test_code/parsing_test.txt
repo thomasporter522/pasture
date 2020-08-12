@@ -1,4 +1,0 @@
-$a,b c,($a,d e,f g,h i,j %),k l $ =>m $a
- aaa bbb,($ccccc,ddddd e) ff => x 
-
-main => x
