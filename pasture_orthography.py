@@ -8,6 +8,8 @@ prior = "%"
 comment_single = "#"
 comment_begin = "#-"
 comment_end = "-#"
+brace_delimiter = "|"
+brace_key = "'"
 	
 def string(exp):
 	if exp is None: return "None"
