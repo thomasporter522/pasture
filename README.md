@@ -20,7 +20,75 @@ In short, pasture is a fusion of symbolic and functional programming. Computatio
 
 ## Tutorial
 
--- Coming soon --
+### Brace Expansion
+
+Pasture includes an extended form of brace expansion, a system most commonly found in BASH. In other programming languages, like Scala, you might want to import many packages from the same library, using:
+    
+    import library.{part1, part2, part3}
+    
+Which essentially expands into three lines (in Scala):
+
+    import library.part1
+    import library.part2
+    import library.part3
+    
+This is a great feature. The brace expansion in BASH takes this idea further, allowing you to use such expansion anywhere in the code, and also allowing braces to be nested:
+
+    a{b,c{d,e}f}g
+    
+Expands to (traditionally):
+
+    abg
+    acdfg
+    acefg
+ 
+Another feature of many programming languages, like python, is multiple assignment: 
+
+    x,y = a,b
+    
+Expands to (traditionally):
+
+    x = a
+    y = b
+    
+But brace expansion, in it traditional form, cannot accomplish this:
+
+    {x,y} = {a,b}
+
+Expands to (traditionally):
+
+    x = a
+    x = b
+    y = a
+    y = b
+
+My solution is to introduce 'linked' braces. Each pair of braces has a key, given by the number of ' characters immediately after the first brace. Any sets of braces with a (nonempty) key are 'linked.' The strings produced by expanding an expression with braces are only those for which the index of the 'choice' of that string agrees within all sets of linked braces. Here is an example (note that in pasture, | separates brace expansion options):
+
+    {'x|y} = {'a|b}
+    
+Expands to (in pasture):
+
+    x = a
+    y = b
+    
+The first string corresponds to choosing the first option of all single ' brace expressions, the second string to choosing the second options. The string 'y = a' is disallowed because the 'y' indicates a choice of 'second' on the first brace expression, and the 'a' indicates a choice of 'first' on the second. Here's another example to make things clearer:
+
+    {'a|b}{c|{'d|e}}
+
+Expands to:
+
+    ac
+    ad
+    bc
+    be
+    
+It's a bit subtle, but it is ultimately extremely powerful. And it is so convenient as to be essentially necessary in pasture, where expressing multiple functions on the same object is common:
+
+    human,horse with_the_torso_of {'{is_mythical | is_alive} | breathes_underwater} => {'true | false}
+    
+This pasture code expresses three things about a centaur (a horse with the torso of a human), and is probably preferable to writing out 'human,horse with_the_torso_of' three times.
+
+Brace expansion will occur on each line in the file, before any other parsing, and must result in a list of rules.
 
 ## Specification
 
@@ -50,7 +118,7 @@ There are some modifications to this bare design:
 - '#' starts a single line comment.
 - '#-' starts, and '-#' ends, a multiline comment.
 - A newline is equivalent to a ';' and the sequence '\\;' is equivalent to the empty string (allowing line continuation).
-- There will be an extended form of brace expansion.
+- There is an extended form of brace expansion.
 
 ### Semantics
 
@@ -69,3 +137,7 @@ The evaluation of an expression according to an evaluation context is the reapea
 - When applying a list of rules to a certain expression, and multiple rules match the expression, which should be applied to the expression? The current design is to simply give rules that appear earlier in the evaluation context precedence, but hopefully, later, more intelligent precedences can be deduced by the compiler, like placing strictly more general rules below strictly more specific.
 - When applying a list of rules to a certain expression, and multiple rules can apply to multiple subexpressions of an expression, should the precedence ordering of the rules or the precedence ordering of the subexpressions take precedence? The answer is the former, since the selection of the subexpression depends on the selection of a rule, so to implement the latter would be awkward.
 These issues of priority contain lots of room for exploration, and the initial decisions are by no means definitive.
+
+
+    
+ 
