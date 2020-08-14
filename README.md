@@ -1,18 +1,18 @@
 # Pasture
 A simple language that takes functional programming beyond its logical extreme.
 
-* [Introduction](##Introduction)
-* [Tutorial](##Tutorial)
-  * [Symbols](###Symbols)
-  * [Expressions](###Expressions)
-    * [Currying](####Currying)
-    * [Delayed Application](####Delayed-Application)
-  * [Rules](###Rules)
-  * [Comments](###Comments)
-  * [Brace Expansion](###Brace-Expansion)
-* [Specification](##specification)
-  * [Syntax](###syntax)
-  * [Semantics](###semantics)
+* [Introduction](#Introduction)
+* [Tutorial](#Tutorial)
+  * [Symbols](#Symbols)
+  * [Expressions](#Expressions)
+    * [Currying](#Currying)
+    * [Delayed Application](#Delayed-Application)
+  * [Rules](#Rules)
+  * [Comments](#Comments)
+  * [Brace Expansion](#Brace-Expansion)
+* [Specification](#Specification)
+  * [Syntax](#Syntax)
+  * [Semantics](#Semantics)
 
 ## Introduction
 The pasture programming language's key innovation is treating functions and type constructors uniformly; both are symbols formally applied to other expressions, and reductions rules may simulate function definition. The language is also fundamentally typeless, with each expression being just a symbol or the formal application of one expression to another. 
