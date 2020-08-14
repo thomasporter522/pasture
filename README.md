@@ -1,6 +1,8 @@
 # Pasture
 A simple language that takes functional programming beyond its logical extreme.
 
+[Introduction](##Introduction)
+
 ## Introduction
 The pasture programming language's key innovation is treating functions and type constructors uniformly; both are symbols formally applied to other expressions, and reductions rules may simulate function definition. The language is also fundamentally typeless, with each expression being just a symbol or the formal application of one expression to another. 
 
@@ -20,9 +22,97 @@ In short, pasture is a fusion of symbolic and functional programming. Computatio
 
 ## Tutorial
 
+Here is a less formal, more intuitive presentation of the language. It can be used in conjunction with the more formal specification below and the example code folder to get an idea of the pasture programming language. 
+
+### Symbols
+
+Computation may be generally thought of as symbol manipulation, where 'symbol' refers to an arbitrary distguishable entity, like a letter or word, with no inherent structure or meaning. The meaning of a collection of symbols is encoded in the structure of their assembly, paired with the rules for their manipulation. In pasture, data is stored as expressions of symbols. Symbols are strings of letters, numerals, and a few special characters like '\_'. They should generally represent ideas that are 'fundamental' in your program, and be atoms of your data. For example, let's make a program that adds 2 and 3 (albeit inefficiently). We can encode the natural numbers using the Peano method, with three symbols:
+
+    0
+    s
+    +
+    
+Where ```0``` will stand for the number 0, ```s``` will stand for the successor function (the successor of n is 1+n), and ```+``` stands for the addition function. There is no notion of 'declaration' in pasture; these symbols will appear in our code without any other announcement of their nature. This is possible because all symbols are treated equally (barring special syntactic characters). Pasture does not know anything about these symbols, so it is up to the programmer to give the symbols meaning, as we shall see. 
+
+### Expressions
+
+Data in pasture is stored as an expression, which is a tree of symbols 'applied' to each other. An expression can either be a plain symbol, or an expression applied to another expression. The expression A applied to expression B is written ```B A``` or ```(B A)```. When stringing multiple applications together, from left to right, parentheses are inferred such: ```A B C D = ((A B) C) D```. The term "applied" is used here to suggest function application, but does not have any inherent behavior tied to it. It's an arbitrary, single, binary (two input) operation. What is A applied to B? It's just A applied to B. There's nothing more to be said. It's "formal" function application. So in our arithmetic system, here are some expressions:
+
+    1. 0
+    2. s
+    3. s s
+    4. 0 s
+    5. 0 s s
+    6. s 0
+    7. b
+    8. b s
+    
+In our interpretation of these expressions in terms of arithmetic, expression 1 represents the number 0. Expression 2 represents the successor function. Expression 3 doesn't make sense, since the successor function doesn't really have a successor. Expression 4 represents the number 1, expression 5 represents the number 2. Expression 6 doesn't make sense either, since we don't know what it means to apply 0 to anything. Expressions 7 and 8 don't make sense, because we don't know what ```b``` is. 
+
+But pasture allows all of these expressions to exist, as well as things like ```(s 0 (0 0) a b)```. We can impose our interpretation of these expressions by writing rules.
+
+#### Currying
+
+An expression can only be applied to one other expression, so how do we deal with symbols representing functions that take in multiple arguments? The usual idiom is currying. When you curry a function like addition, you change it from a function that takes in two numbers and outputs one number, and turn it into a function that takes in one number (the first argument) and outputs a new function, which itself takes in one number (the second argument) and outputs one number (the result). So to symbolize the sum of ```A``` and ```B```, you can write ```A (B +)```.
+
+#### Delayed Application
+
+This occurs fairly frequently, along with other instances when you want to group the symbols right to left (such as ```1 (f inverse)``` to represent the inverse of f applied to 1). To reduce the parentheses needed, pasture introduces a new notation called 'delayed application' (symbolized by a comma). It essentially makes the parser 'wait' until the end of the the chain of commas to associate the symbols, and associates them from right to left. A few examples should illustrate the idea better than I can explain:
+
+    a (b c) = a,b c
+    a (b (c d)) = a,b,c d
+    (a b) (c d) = a b,c d
+    ((a b) c) (d (e f)) = a b c,d,e f
+    (((a b) (c (d e))) f) (g (h i)) = a b,c,d e f,g,h i
+    (a b) ((c d) e) = a b,(c d) e
+    
+So curried expressions can be naturally written like: ```1,2 +```.
+
+### Rules
+
+Rules are like lines of code in pasture, and govern the execution of the program. They determine how the computer manipulates symbols. Each rule is of the form ```pattern => output```. A pasture file evaluates an expression by applying the first rule it can, by matching a part of the expression with the pattern and replacing that subexpression with the output. Here is an example rule:
+
+    0 s is_zero => false
+    
+This is like defining the function ```is_zero``` in the particular case of 1 (```0 s```). In the expression that the code is trying to simplify, anywhere there is an expression of the form ```0 s is_zero```, that gets replaced with the symbol ```false```. These rules of replacement are how we breathe life into the symbols, and grant them meaning. 
+
+The output can also be a compound expression, like:
+
+    0 s is_zero => true not
+    
+Depending on how your code is structured, and what you consider to be an atom. 
+
+But patterns can be more than plain expressions. The ```$``` character matches any subexpression (it's a wildcard):
+
+    $ s is_zero => false
+    
+This accounts for all the natural numbers except 0, as they are all expressed as the successor of something! The final component of pattern matching is bound matches, written as ```$something```:
+
+    0,$x + => x
+    
+The ```$x``` still matches anything, but that anything is then bound to the word ```x```, and replaces ```x``` in the output expression. These bindings can be used to restrict the matches, since all bound wildcards have to match for the pattern to match. The basic way to express this is the definition of the equals operation in pasture:
+
+    $x,$x = => true
+    
+Newlines or semicolons separate rules, with ```\``` allowing line continuation:
+
+    a => b
+    b => c; c => d
+    d \
+    => e
+    
+And that's essentially it! Figure out the symbols you need to express data in your program, and write rules for manipulating expressions. A program runs by evaluating the expression ```main``` in your program. The only details left to understanding pasture are the comments and brace expansion (see below), and the order of precedence of pattern matching (see the specification section below). 
+
+### Comments
+
+A ```#``` character starts a comment that extends to the end of the line (until the next newline or ```;``` that doesn't have a ```\``` before it). ```#-``` and ```-#``` enclose arbitrary comments, and stack (in ```#-a#-b-#c-#```, everything is commented out). You can even use these to extend a line by commenting out the newline character!
+
+    a => #-
+    -# b
+
 ### Brace Expansion
 
-Pasture includes an extended form of brace expansion, a system most commonly found in BASH. In other programming languages, like Scala, you might want to import many packages from the same library, using:
+Pasture includes an extended form of brace expansion, a system most commonly found in BASH. In other programming languages, like Scala, you might want to import many things from the same library, using:
     
     import library.{part1, part2, part3}
     
@@ -86,7 +176,7 @@ It's a bit subtle, but it is ultimately extremely powerful. And it is so conveni
 
     human,horse with_the_torso_of {'{is_mythical | is_alive} | breathes_underwater} => {'true | false}
     
-This pasture code expresses three things about a centaur (a horse with the torso of a human), and is probably preferable to writing out 'human,horse with_the_torso_of' three times.
+This pasture code expresses three things about a centaur (a horse with the torso of a human), and is probably preferable to writing out ```human,horse with_the_torso_of``` three times.
 
 Brace expansion will occur on each line in the file, before any other parsing, and must result in a list of rules.
 
