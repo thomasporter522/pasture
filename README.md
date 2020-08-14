@@ -100,6 +100,7 @@ But patterns can be more than plain expressions. The ```$``` character matches a
 This accounts for all the natural numbers except 0, as they are all expressed as the successor of something! The final component of pattern matching is bound matches, written as ```$something```:
 
     0,$x + => x
+    $x s,$y + => x,y + s
     
 The ```$x``` still matches anything, but that anything is then bound to the word ```x```, and replaces ```x``` in the output expression. These bindings can be used to restrict the matches, since all bound wildcards have to match for the pattern to match. The basic way to express this is the definition of the equals operation in pasture:
 
