@@ -10,9 +10,9 @@ A simple language that takes functional programming beyond its logical extreme.
   * [Rules](###Rules)
   * [Comments](###Comments)
   * [Brace Expansion](###Brace-Expansion)
-* [Specification](##Specification)
-  * [Syntax](###Syntax)
-  * [Semantics](###Semantics)
+* [Specification](##specification)
+  * [Syntax](###syntax)
+  * [Semantics](###semantics)
 
 ## Introduction
 The pasture programming language's key innovation is treating functions and type constructors uniformly; both are symbols formally applied to other expressions, and reductions rules may simulate function definition. The language is also fundamentally typeless, with each expression being just a symbol or the formal application of one expression to another. 
