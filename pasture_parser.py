@@ -173,7 +173,6 @@ def ast(line):
 # return a list of rules, in abstract syntax tree form, specified by the pasture code in [text]
 def parse(text):
 	return list(filter(lambda x: x != [], [ast(tokenize(line)) for line in group(text)]))
-	
-if __name__ == "__main__":
-	rules = parse(open("test_code/parsing_test.txt").read())
-	print(rules)
+
+
+
