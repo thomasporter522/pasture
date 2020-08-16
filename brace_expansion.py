@@ -44,8 +44,10 @@ def parse_or(text, key):
 def merge_bindings(b1, b2):
 	for key in list(b1):
 		if key in list(b2) and b2[key] != b1[key]: return None
-	b1.update(b2)
-	return b1
+	re = {}
+	re.update(b1)
+	re.update(b2)
+	return re
 	
 # merge a list of possibilities (each possibility a (text, binding) pair), only concatenating where bindings don't conflict
 def merge_possibilities(l1, l2):
@@ -96,3 +98,4 @@ def process(ast, bindings = {}):
 			
 def expand(text):
 	return [x[0] for x in process(parse_cat(text))]
+	

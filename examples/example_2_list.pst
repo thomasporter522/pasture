@@ -5,8 +5,7 @@
 $x s,$y + => x,y + s
 
 # Define head and tail functions
-$,$y cons head => y
-$x,$ cons tail => x
+$x,$y cons {'head|tail} => {'y|x}
 
 # Define length function
 nil length => 0

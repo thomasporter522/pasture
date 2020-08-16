@@ -1,3 +1,4 @@
+from brace_expansion import expand
 from pasture_orthography import \
 	line_delimiter, \
 	line_escape, \
@@ -49,6 +50,13 @@ def remove_comments(text):
 		i += jump
 		
 	return noncomment_text
+
+def flatten(l):
+	re = []
+	for i in l:
+		for j in i:
+			re.append(j)
+	return re
 		
 # transforms [text] from raw string to list of lines of code
 def group(text):
@@ -57,7 +65,7 @@ def group(text):
 	text = text.replace(line_escape + line_delimiter, "") # implement line continuation
 	text = remove_comments(text) # remove commented text
 	text = text.split(line_delimiter) # return list of lines
-	
+	text = flatten([expand(line) for line in text])
 	return text
 		
 # transforms raw text of [line] into a list of tokens
