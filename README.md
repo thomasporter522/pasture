@@ -27,7 +27,7 @@ Pasture is similar in spirit to symbolic programming, with all computation expre
 
 Pasutre also embraces a 'left to right, top to bottom' philosophy, employing something like Lawvere's notation for category theory by writing functions to the right of their arguments. This means that the computation can be read left to right when it is the composition of many functions of low arity, but at the cost of greater confusion when dealing with few functions of high arity. 
 
-Pasture is WILD. There is no type system, nor are variables, constants, functions, keywords, and data instrinsically distinct from each other. There are no runtime errors; any grammatical program will execute (except for space and time bounds). This places a huge burden on both the author and reader of pasture code, and probably dooms pasture to suffer from many of the problems of LISP. Pasture is far too extreme to be practical. My hope is just that pasture is interesting.
+Pasture is wild. There is no type system, nor are variables, constants, functions, keywords, and data instrinsically distinct from each other. There are no runtime errors; any grammatical program will execute (except for space and time bounds). This places a burden on both the author and reader of pasture code, and probably dooms pasture to suffer from many of the problems of LISP. Pasture is far too extreme to be practical. My hope is just that pasture is interesting.
 
 In short, pasture is a fusion of symbolic and functional programming. Computation is best written and thought of as function application, but secretly represents the application of rewrite rules _on trees of formal function application_.
 
