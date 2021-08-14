@@ -31,6 +31,7 @@ def verbose_string(exp, internal = False):
 # (and thus whether to return contextual information )
 # caution specifies whether 
 def string(exp, internal = False, first_arg = True):
+	#print(exp)
 		
 	re = ""
 	
@@ -40,15 +41,14 @@ def string(exp, internal = False, first_arg = True):
 	
 	elif exp[0] == "assignment": 
 		
-		assert len(exp) == 3
+		assert len(exp) == 3, "Syntax Error: assignment operator needs two arguments"
 		re = string(exp[1], True)+" "+assignment+" "+string(exp[2], True)
 		
 	elif exp[0] == "application": 
 		
-		assert len(exp) == 3
+		assert len(exp) == 3, "Syntax Error: application operator needs two arguments"
 		
 		re = None
-		
 		if type(exp[1]) is list and exp[1][0] == "application" and not first_arg:
 			# if you add parens, you can pretend you are the first arg again 
 			re = "("+string(exp[1], True, True)+")"	

@@ -50,13 +50,6 @@ def remove_comments(text):
 		i += jump
 		
 	return noncomment_text
-
-def flatten(l):
-	re = []
-	for i in l:
-		for j in i:
-			re.append(j)
-	return re
 		
 # transforms [text] from raw string to list of lines of code
 def group(text):
@@ -70,7 +63,6 @@ def group(text):
 		
 # transforms raw text of [line] into a list of tokens
 def tokenize(line):
-	
 	tokenized_line = []
 	
 	i = 0
@@ -94,12 +86,15 @@ def tokenize(line):
 			(len(application_cleaned_line) == 0 \
 			or application_cleaned_line[-1] == assignment \
 			or i + 1 == len(tokenized_line) \
-			or tokenized_line[i+1] in [application, assignment]): pass 
+			or tokenized_line[i+1] in [application, assignment]
+			or (i > 0 and tokenized_line[i-1] == delayed_application)
+			or (i + 1 < len(tokenized_line) and tokenized_line[i+1] == delayed_application)): continue 
 			# remove spaces at the beginning
 			# remove spaces after assignment
 			# remove spaces at the end
 			# remove duplicate spaces, and spaces before assignment
-		else: application_cleaned_line.append(tokenized_line[i])
+			# remove spaces bordering delated application
+		application_cleaned_line.append(tokenized_line[i])
 	
 	return application_cleaned_line
 	
@@ -173,6 +168,3 @@ def ast(line):
 # return a list of rules, in abstract syntax tree form, specified by the pasture code in [text]
 def parse(text):
 	return list(filter(lambda x: x != [], [ast(tokenize(line)) for line in group(text)]))
-
-
-

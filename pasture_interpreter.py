@@ -5,7 +5,7 @@ from pasture_orthography import string
 import sys
 
 if __name__ == "__main__":
-	filename = "examples/example_2_list.pst"
+	filename = "code/integer.pst.txt"
 	if len(sys.argv) > 1: filename = sys.argv[1]
 	rules = parser.parse(open(filename).read())
 	print("---Rules---")

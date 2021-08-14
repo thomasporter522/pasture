@@ -1,9 +1,10 @@
+from os import extsep
 from pasture_orthography import string
 	
 # attempts to match [exp] with [pattern]
 # returns the generated bindings if successful, otherwise None
 def match(exp, pattern):
-	
+	#print("matching", exp, pattern)
 	if len(exp) == 1 and exp == pattern: return {}
 	
 	if pattern[0] == "argument":
@@ -26,6 +27,7 @@ def match(exp, pattern):
 
 		if conflicting_bindings: return None
 		left.update(right)
+		#print("Bindings", left)
 		return left
 		
 	return None
@@ -33,8 +35,9 @@ def match(exp, pattern):
 # recusursively replaces [exp] according to [bindings]
 def replace(exp, bindings):
 	if bindings is None: return None
-	if exp[0] in list(bindings): return bindings[exp[0]]
-	if type(exp) is list: return [replace(subexp, bindings) for subexp in exp]
+	if type(exp) is list: 
+		if len(exp) > 1: return [exp[0]] + [replace(subexp, bindings) for subexp in exp[1:]]
+		elif exp[0] in list(bindings): return bindings[exp[0]]
 	return exp
 			
 # attempts to apply [rule] to [exp]. 
@@ -59,22 +62,21 @@ def step(exp, rules):
 	for rule in rules:
 		newexp = subexpression_apply(exp, rule)
 		if newexp is not None:
-			return newexp
-	return exp
+			#print("Rule applied:", string(rule))
+			return newexp, rule
+	return None, None
 	
 step_limit = 10000
+rule_verbose = False
 			
 # big step evaluate the epression [exp] according to [rules]
 def evaluate(exp, rules):
-	a = exp
 	steps_taken = 0
-	print(str(steps_taken)+": "+string(a))
-	b = step(a, rules)
-	while a != b:
+	rule = None
+	while exp is not None:
+		#print(exp)
 		steps_taken += 1
-		print(str(steps_taken)+": "+string(b))
-		c = step(b, rules)
-		a = b
-		b = c
+		print(str(steps_taken)+": "+string(exp)+("" if rule is None or not rule_verbose else " ("+string(rule)+")"))
+		exp, rule = step(exp, rules)
 		assert steps_taken <= step_limit
-	return a
+	return exp
